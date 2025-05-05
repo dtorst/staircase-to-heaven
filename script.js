@@ -67,6 +67,15 @@ const gameOverOverlay = document.getElementById('gameOverOverlay');
 const finalScoreTextElement = document.getElementById('finalScoreText'); 
 const floatingTextContainer = document.getElementById('floatingTextContainer'); // New container ref
 
+// --- Mobile Detection & Touch State ---
+const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+let touchStartX = 0;
+let touchStartY = 0;
+let touchStartTime = 0;
+const SWIPE_THRESHOLD = 50; // Min pixels horizontal distance for a swipe
+const TAP_THRESHOLD_TIME = 200; // Max ms for a tap
+const TAP_THRESHOLD_DIST = 10; // Max pixels moved for a tap
+
 function init() {
     // Scene
     scene = new THREE.Scene();
@@ -120,44 +129,16 @@ function init() {
     });
 
     // Keyboard listeners
-    window.addEventListener('keydown', (event) => {
-        switch (event.code) {
-            case 'KeyA':
-            case 'ArrowLeft':
-                keys.left = true;
-                break;
-            case 'KeyD':
-            case 'ArrowRight':
-                keys.right = true;
-                break;
-            case 'Space':
-                 if (!gameStarted) {
-                    // Allow space to start if initial button OR play again button is visible
-                    if (!startButton.classList.contains('hidden') || !playAgainButton.classList.contains('hidden')) {
-                       event.preventDefault(); 
-                       startGame();
-                    }
-                } else {
-                    keys.space = true;
-                }
-                break;
-        }
-    });
-    window.addEventListener('keyup', (event) => {
-        switch (event.code) {
-            case 'KeyA':
-            case 'ArrowLeft':
-                keys.left = false;
-                break;
-            case 'KeyD':
-            case 'ArrowRight':
-                keys.right = false;
-                break;
-            case 'Space':
-                keys.space = false; // Always set to false on keyup
-                break;
-        }
-    });
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('keyup', handleKeyUp);
+
+    // Touch (conditionally)
+    if (isMobile) {
+        console.log("Mobile device detected, adding touch listeners.");
+        canvas.addEventListener('touchstart', handleTouchStart, { passive: false });
+        canvas.addEventListener('touchmove', handleTouchMove, { passive: false });
+        canvas.addEventListener('touchend', handleTouchEnd, { passive: false });
+    }
 
     console.log("Three.js initialized."); 
 
@@ -628,6 +609,112 @@ function showFloatingScore(value, position3D) {
              floatingTextContainer.removeChild(textElement);
         }
     }, 1000);
+}
+
+// --- Input Handlers ---
+function handleKeyDown(event) {
+    switch (event.code) {
+        case 'KeyA':
+        case 'ArrowLeft': keys.left = true; break;
+        case 'KeyD':
+        case 'ArrowRight': keys.right = true; break;
+        case 'Space':
+            if (!gameStarted) {
+                if (!startButton.classList.contains('hidden') || !playAgainButton.classList.contains('hidden')) {
+                   event.preventDefault(); 
+                   startGame();
+                }
+            } else {
+                keys.space = true;
+            }
+            break;
+    }
+}
+
+function handleKeyUp(event) {
+    switch (event.code) {
+        case 'KeyA':
+        case 'ArrowLeft': keys.left = false; break;
+        case 'KeyD':
+        case 'ArrowRight': keys.right = false; break;
+        case 'Space': keys.space = false; break;
+    }
+}
+
+function handleTouchStart(event) {
+    event.preventDefault(); // Prevent potential browser actions like scrolling
+    if (event.touches.length === 0) return;
+    const touch = event.touches[0];
+    touchStartX = touch.clientX;
+    touchStartY = touch.clientY;
+    touchStartTime = Date.now();
+    // Reset keys that might be triggered by touch end
+    keys.space = false;
+    keys.left = false;
+    keys.right = false;
+}
+
+function handleTouchMove(event) {
+    event.preventDefault(); // Prevent scrolling during swipe attempt
+    // We don't need to do much here, just prevent default.
+    // Logic happens in touchend based on start/end points.
+}
+
+function handleTouchEnd(event) {
+    event.preventDefault();
+    if (touchStartX === 0) return; // No corresponding touchstart
+
+    const touchEndTime = Date.now();
+    const touchDuration = touchEndTime - touchStartTime;
+
+    // Use changedTouches to get the end position of the touch that was lifted
+    if (event.changedTouches.length === 0) return;
+    const touch = event.changedTouches[0];
+    const touchEndX = touch.clientX;
+    const touchEndY = touch.clientY;
+
+    const deltaX = touchEndX - touchStartX;
+    const deltaY = touchEndY - touchStartY;
+
+    // --- Determine Action: Tap or Swipe ---
+    if (touchDuration < TAP_THRESHOLD_TIME && 
+        Math.abs(deltaX) < TAP_THRESHOLD_DIST && 
+        Math.abs(deltaY) < TAP_THRESHOLD_DIST)
+    { 
+        // TAP -> Jump (or Start/Restart if applicable)
+        console.log("Tap detected");
+        if (!gameStarted) {
+             if (!startButton.classList.contains('hidden') || !playAgainButton.classList.contains('hidden')) {
+                 startGame();
+             }
+        } else {
+             keys.space = true;
+             // Reset space after a short delay to mimic key press
+             setTimeout(() => { keys.space = false; }, 100);
+        }
+    }
+     else if (Math.abs(deltaX) > SWIPE_THRESHOLD && Math.abs(deltaX) > Math.abs(deltaY)) {
+        // HORIZONTAL SWIPE -> Left/Right
+        if (deltaX < 0) {
+            // Swipe Left
+            console.log("Swipe Left detected");
+            keys.left = true;
+            // Reset key after short delay
+            setTimeout(() => { keys.left = false; }, 150); // Adjust delay as needed
+        } else {
+            // Swipe Right
+            console.log("Swipe Right detected");
+            keys.right = true;
+             // Reset key after short delay
+            setTimeout(() => { keys.right = false; }, 150);
+        }
+    }
+    // else: Vertical swipe or insignificant movement - do nothing
+
+    // Reset start points
+    touchStartX = 0;
+    touchStartY = 0;
+    touchStartTime = 0;
 }
 
 // Initialize Three.js setup but don't start the game loop yet
