@@ -1,0 +1,144 @@
+body {
+    margin: 0;
+    overflow: hidden; /* Prevent scrollbars */
+    /* Remove flexbox for now */
+    background-color: #87CEEB; /* Simple sky blue background for now */
+}
+
+#gameCanvas {
+    display: block; /* Remove extra space below canvas */
+    width: 100%;
+    height: 100%;
+    position: absolute; /* Take up full space behind button */
+    top: 0;
+    left: 0;
+    z-index: -1; /* Place canvas behind other elements */
+}
+
+#startButton {
+    /* Restore absolute positioning */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 20px 40px;
+    font-size: 2em;
+    color: white;
+    background-color: red;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    z-index: 1; 
+    transition: background-color 0.3s;
+    /* margin-top: 30px; */ /* Remove margin */
+}
+
+#startButton:hover {
+    background-color: darkred;
+}
+
+#startButton.hidden {
+    /* This might not be needed anymore if we rely on the overlay's hidden class */
+    /* display: none; */
+}
+
+/* Play Again Button (inside overlay) */
+#playAgainButton {
+    padding: 20px 40px;
+    font-size: 2em;
+    color: white;
+    background-color: red;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-top: 30px; /* Space above button inside overlay */
+}
+
+#playAgainButton:hover {
+    background-color: darkred;
+}
+
+/* Landscape Style - Removed */
+/* 
+#landscape {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 25%; 
+    background-color: #228B22; 
+    z-index: -1; 
+    pointer-events: none; 
+}
+*/
+
+/* Game Over Overlay Styles */
+#gameOverOverlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent black */
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 10; /* Ensure it's above everything else */
+    font-family: Arial, sans-serif;
+}
+
+#gameOverOverlay.hidden {
+    display: none;
+}
+
+#gameOverText {
+    font-size: 5em;
+    font-weight: bold;
+    margin-bottom: 20px;
+    text-shadow: 3px 3px 5px black;
+}
+
+#finalScoreText {
+    font-size: 2em;
+}
+
+/* Generic hidden class */
+.hidden {
+    display: none !important; /* Use !important to override potential conflicts if needed */
+}
+
+/* Floating Text Styles */
+#floatingTextContainer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none; /* Don't interfere with clicks */
+    overflow: hidden; /* Hide text that goes off-screen */
+    z-index: 5; /* Above canvas/landscape, below overlay */
+}
+
+.floating-score {
+    position: absolute;
+    color: white;
+    font-size: 1.5em; /* Adjust size as needed */
+    font-weight: bold;
+    text-shadow: 1px 1px 2px black;
+    white-space: nowrap;
+    animation: floatUpFade 1s ease-out forwards;
+}
+
+@keyframes floatUpFade {
+    0% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(-50px); /* Adjust distance */
+    }
+} 

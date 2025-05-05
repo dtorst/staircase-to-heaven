@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staircase to Heaven</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <button id="startButton">Start</button>
+    <canvas id="gameCanvas"></canvas>
+
+    <!-- Landscape Background -->
+    <!-- <div id="landscape"></div> -->
+
+    <!-- Floating Text Container -->
+    <div id="floatingTextContainer"></div>
+
+    <!-- Game Over Overlay -->
+    <div id="gameOverOverlay" class="hidden">
+        <div id="gameOverText">GAME OVER</div>
+        <div id="finalScoreText"></div>
+        <button id="playAgainButton" class="hidden">Play Again</button>
+    </div>
+
+    <!-- Import Three.js -->
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.163.0/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.163.0/examples/jsm/"
+            }
+        }
+    </script>
+    <script type="module" src="script.js"></script>
+</body>
+</html> 
