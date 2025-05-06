@@ -88,6 +88,7 @@ body {
     align-items: center;
     z-index: 10; /* Ensure it's above everything else */
     font-family: Arial, sans-serif;
+    text-align: center;
 }
 
 #gameOverOverlay.hidden {
@@ -105,6 +106,49 @@ body {
 #finalScoreText {
     font-size: 2em;
     text-align: center;
+}
+
+/* Instruction Card Styles */
+#instructionCard {
+    position: absolute;
+    top: 25%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(20, 20, 20, 0.85);
+    color: white;
+    padding: 25px;
+    border-radius: 15px;
+    text-align: center;
+    z-index: 6; /* Above startButton (1) & floatingText (5), below gameOverOverlay (10) */
+    font-family: 'Arial', sans-serif;
+    width: 90%;
+    max-width: 450px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.5);
+}
+
+#instructionCard h1 {
+    font-size: 2.2em;
+    margin-bottom: 15px;
+    text-shadow: 2px 2px 4px black;
+}
+
+#instructionCard .instruction-subtitle {
+    font-size: 1.5em;
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: #FFD700; /* Gold */
+}
+
+#instructionCard .instruction-controls p {
+    font-size: 1.1em;
+    margin-bottom: 10px;
+    line-height: 1.6;
+}
+
+#instructionCard .instruction-controls p .control-action {
+    font-weight: bold;
+    color: #FFA500; /* Orange */
+    margin-right: 5px;
 }
 
 /* Generic hidden class */

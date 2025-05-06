@@ -47,6 +47,7 @@ const keys = {
 const startButton = document.getElementById('startButton');
 const playAgainButton = document.getElementById('playAgainButton'); // New button reference
 const canvas = document.getElementById('gameCanvas');
+const instructionCard = document.getElementById('instructionCard'); // Added instruction card reference
 // Get score element (assuming it exists in HTML or create it if needed)
 let scoreElement = document.getElementById('score'); 
 if (!scoreElement) { // Create if doesn't exist (like before)
@@ -276,6 +277,7 @@ function startGame() {
     gameStarted = true;
     gameOverOverlay.classList.add('hidden');
     startButton.classList.add('hidden');
+    if(instructionCard) instructionCard.classList.add('hidden'); // Hide instruction card
     resetGame(); 
     clock.start();
 
