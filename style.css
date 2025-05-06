@@ -18,7 +18,7 @@ body {
 #startButton {
     /* Restore absolute positioning */
     position: absolute;
-    top: 50%;
+    top: 85%;
     left: 50%;
     transform: translate(-50%, -50%);
     padding: 20px 40px;
