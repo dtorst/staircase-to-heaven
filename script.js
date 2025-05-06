@@ -860,13 +860,13 @@ function handleTouchEnd(event) {
             console.log("Swipe Left detected");
             keys.left = true;
             // Reset key after short delay
-            setTimeout(() => { keys.left = false; }, 150); // Adjust delay as needed
+            setTimeout(() => { keys.left = false; }, 75); // Adjust delay as needed
         } else {
             // Swipe Right
             console.log("Swipe Right detected");
             keys.right = true;
              // Reset key after short delay
-            setTimeout(() => { keys.right = false; }, 150);
+            setTimeout(() => { keys.right = false; }, 75);
         }
     }
     // else: Vertical swipe or insignificant movement - do nothing
